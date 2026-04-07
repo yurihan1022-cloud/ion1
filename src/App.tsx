@@ -274,23 +274,34 @@ const App = () => {
 
         <div className="text-center w-full">
           <div className="flex justify-center items-baseline gap-1 mb-2">
-            <span className="font-bold text-lg text-gray-800">{data.name}</span>
-            <span className="text-xs text-gray-400">({data.symbol})</span>
-            {isComplete && (
-  <span className="ml-2 text-blue-600 font-black" style={{ fontSize: '1.2em' }}>
-    {data.symbol}
-    <sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
-      {isCation ? (
-        /* 양이온: 나트륨(1개 잃음 -> +), 마그네슘(2개 잃음 -> 2+) */
-        data.lost === 1 ? "+" : `${data.lost}+`
-      ) : (
-        /* 음이온: 플루오린(1개 얻음 -> -), 산소(2개 얻음 -> 2-) */
-        (atomKey === "F" ? "-" : "2-")
-      )}
-    </sup>
+  {/* 1. 이름 표시: 이온이 되면 이름이 바뀌고 색상도 파랗게 강조됨 */}
+  <span className={`font-bold text-lg ${isComplete ? "text-blue-600" : "text-gray-800"}`}>
+    {(() => {
+      if (!isComplete) return data.name; // 원자일 때 (나트륨, 산소 등)
+      if (atomKey === "O") return "산화"; // 산소 -> 산화 (예외)
+      if (!isCation) return data.name + "화"; // 비금속 -> ~화 (플루오린화)
+      return data.name; // 금속 -> 이름 그대로 (나트륨, 마그네슘)
+    })()}
+    {isComplete && " 이온"}
   </span>
-)}
-          </div>
+
+  {/* 2. 원소 기호 */}
+  <span className="text-xs text-gray-400">({data.symbol})</span>
+
+  {/* 3. 이온 식 표시 (위첨자 포함) */}
+  {isComplete && (
+    <span className="ml-2 text-blue-600 font-black" style={{ fontSize: '1.2em' }}>
+      {data.symbol}
+      <sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
+        {isCation ? (
+          data.lost === 1 ? "+" : `${data.lost}+`
+        ) : (
+          atomKey === "F" ? "-" : "2-"
+        )}
+      </sup>
+    </span>
+  )}
+</div>
 
           {/* 조작 버튼 */}
           <div className="flex flex-col gap-2 mt-2">
