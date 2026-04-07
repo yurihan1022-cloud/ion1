@@ -277,25 +277,16 @@ const App = () => {
             <span className="font-bold text-lg text-gray-800">{data.name}</span>
             <span className="text-xs text-gray-400">({data.symbol})</span>
             {isComplete && (
-              <span className="ml-2 text-blue-600 font-black">
-                {data.symbol}
-                {isCation
-                  ? data.protons -
-                      (data.protons -
-                        data.lost -
-                        (data.protons > 10 ? 10 : 2)) >
-                    1
-                    ? `${data.lost}+`
-                    : "+"
-                  : data.outer - (data.outer - (8 - data.outer)) > 1
-                  ? `${8 - data.outer}-`
-                  : "-"}
-                {atomKey === "Mg" && data.lost === 2 ? "2+" : ""}
-                {atomKey === "O" && data.outer === 8 ? "2-" : ""}
-                {atomKey === "Na" && data.lost === 1 ? "+" : ""}
-                {atomKey === "F" && data.outer === 8 ? "-" : ""}
-              </span>
-            )}
+  <span className="ml-2 text-blue-600 font-black">
+    {data.symbol}
+    <sup>
+      {isCation 
+        ? (data.lost > 1 ? `${data.lost}+` : "+") 
+        : (8 - (simData[atomKey].outer - (isCation ? 0 : 0)) > 1 // 아래 더 직관적인 코드로 제안합니다.
+      )}
+    </sup>
+  </span>
+)}
           </div>
 
           {/* 조작 버튼 */}
