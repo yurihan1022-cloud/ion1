@@ -277,12 +277,15 @@ const App = () => {
             <span className="font-bold text-lg text-gray-800">{data.name}</span>
             <span className="text-xs text-gray-400">({data.symbol})</span>
             {isComplete && (
-  <span className="ml-2 text-blue-600 font-black">
+  <span className="ml-2 text-blue-600 font-black" style={{ fontSize: '1.2em' }}>
     {data.symbol}
-    <sup>
-      {isCation 
-        ? (data.lost > 1 ? `${data.lost}+` : "+") 
-        : (8 - (simData[atomKey].outer - (isCation ? 0 : 0)) > 1 // 아래 더 직관적인 코드로 제안합니다.
+    <sup style={{ fontSize: '0.6em', verticalAlign: 'super' }}>
+      {isCation ? (
+        /* 양이온: 나트륨(1개 잃음 -> +), 마그네슘(2개 잃음 -> 2+) */
+        data.lost === 1 ? "+" : `${data.lost}+`
+      ) : (
+        /* 음이온: 플루오린(1개 얻음 -> -), 산소(2개 얻음 -> 2-) */
+        (atomKey === "F" ? "-" : "2-")
       )}
     </sup>
   </span>
